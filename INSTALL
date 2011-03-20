@@ -1,0 +1,19 @@
+This is the midi_to_ipo Blender 2.5 Add-On INSTALL File. 
+
+
+Table of contents
+
+1. Mac OS X
+
+--
+
+1. Mac OS X
+
+To install copy the folder midi_to_ipo into the addons folder of your blender installation. 
+This folder is usually located in the app-package of blender. To access it right click 
+on the blender icon in your applications folder and choose "Show Package Contents" navigate to 
+
+Contents => MacOS => 2.56 => scripts => addons
+
+copy the folder(!) midi_to_ipo there. 
+Start Blender and activate the add-on.  
