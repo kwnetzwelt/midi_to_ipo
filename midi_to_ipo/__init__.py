@@ -47,13 +47,14 @@ def register_note(itrack_index, ichannel_index, ipitch, ivelocity,ikeyDownTime, 
 class Midi_Generator(bpy.types.Operator):
     bl_idname="Midi_Generator"
     bl_label="Midi Generator"
-    notes = ["c","d","e","f","g","a","h" ]
+    notes = ["c","d","e","f","g","a","b" ]
     object = None
     file = None
     MICROSECONDS_PER_MINUTE = 60000000
     tempo = TPQN = fps = 0
     bpm = 120
     track = None
+    note_on = False
     @classmethod
     def poll(cls, context):
         return context.object is not None
@@ -115,24 +116,34 @@ class Midi_Generator(bpy.types.Operator):
             if(ev.type == "SET_TEMPO"):
                 self.bpm = self.MICROSECONDS_PER_MINUTE / Midi.getNumber(ev.data, 3)[0]
                 continue
-                
-            if(ev.type == "NOTE_OFF"):
-                if(self.shouldSkipIfDrum(ev.pitch)):
-                    continue
-                self.object.location = org 
-                print("Inserting Note Off")
-                self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time))
             
+            if(not self.object.midi_setting_asDrum):
+                if(ev.type == "NOTE_OFF" or (ev.type == "NOTE_ON" and self.note_on == True)):
+                    if(self.shouldSkipIfDrum(ev.pitch)):
+                        continue
+                    self.object.location = org 
+                    #print("Inserting Note Off")
+                    if(self.note_on):
+                        self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time-2))
+                    else:
+                        self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time))
+                    self.note_on = False
+                
             if(ev.type == "NOTE_ON"):
                 
                 if(self.shouldSkipIfDrum(ev.pitch)):
                     continue
-                print("2",org[0],recent_location[0])
+                #print("2",org[0],recent_location[0])
 
                 if self.object.midi_setting_style == "ADD":
                     print("Reset Position")
                     org = recent_location[:]
-                        
+                
+                if(self.object.midi_setting_asDrum):
+                    self.object.location = org 
+                    self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time-2))
+                  
+                 
                 # shall we animate velocity?
                 if self.object.midi_setting_value == "VELOCITY" or self.object.midi_setting_value == "BOTH":
                     if ev.velocity > 0:
@@ -141,7 +152,7 @@ class Midi_Generator(bpy.types.Operator):
                         recent_location[0] = org[0]
                         
                         print ("Had zero")
-                print("3",org[0],recent_location[0])
+                #print("3",org[0],recent_location[0])
 
                         
                 # shall we animate key
@@ -161,7 +172,7 @@ class Midi_Generator(bpy.types.Operator):
                     kfx.interpolation = self.object.midi_setting_interpolation
                     kfy = fcuy.keyframe_points.add(value=recent_location[1],frame=self.getTimeFrame(ev.time))
                     kfy.interpolation = self.object.midi_setting_interpolation
-        
+                self.note_on = True
                 
                 
         return {'RUNNING_MODAL'}
@@ -217,13 +228,17 @@ class Midi_Generator(bpy.types.Operator):
             if v == n:
                 break;
             index = index + 2
+            # handle no-sharp between e and f
+            if v == "e":
+                index = index -1
+            
         
         # adding sharpness
         index = index + s
             
         #handling octave
         index = index + o*12
-        print(n,s,o)
+        print("Requested Note,Sharp,Octave,Index: ", n,s,o,index)
         return index
     
     def shouldSkipIfDrum(self,pitch):

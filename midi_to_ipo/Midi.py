@@ -119,7 +119,7 @@ class MidiEvent:
         global runningStatus
         self.time = time
         # do we need to use running status?
-        print("byte 0 : ",dbytes[0])
+        #print("byte 0 : ",dbytes[0])
             
         if not (int(dbytes[0]) & 0x80):
             dbytes = str.encode(chr(runningStatus))[1:] + dbytes
