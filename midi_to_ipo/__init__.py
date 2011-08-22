@@ -17,7 +17,7 @@ Features:
  
 """
 
-bl_addon_info = {
+bl_info = {
     "name": "Midi Driver",
     "author": "Kai Wegner",
     "version": (0, 1),
@@ -32,6 +32,7 @@ import bpy
 import sys
 
 from . import Midi
+
 registered_notes = []
 def register_note(itrack_index, ichannel_index, ipitch, ivelocity,ikeyDownTime, ikeyUpTime):
     registered_notes.append({
@@ -45,7 +46,7 @@ def register_note(itrack_index, ichannel_index, ipitch, ivelocity,ikeyDownTime, 
                              "keyUp":ikeyUpTime})
 
 class Midi_Generator(bpy.types.Operator):
-    bl_idname="Midi_Generator"
+    bl_idname="ops.midi_generator"
     bl_label="Midi Generator"
     notes = ["c","d","e","f","g","a","b" ]
     object = None
@@ -68,13 +69,17 @@ class Midi_Generator(bpy.types.Operator):
         file = Midi.MidiFile()
         file.open(self.object.midi_setting_file)
         
-        if self.object.midi_setting_asDrum:
-            self.object.midi_setting_drum_inote = self.noteStringToInt(self.object.midi_setting_drum_note)
-            print("drum listening to " + str(self.object.midi_setting_drum_inote))
         
         Midi.register_note = register_note
         
         file.read()
+        
+        #if(self.object.midi_setting)
+        
+        if self.object.midi_setting_asDrum:
+            self.object.midi_setting_drum_inote = self.noteStringToInt(self.object.midi_setting_drum_note)
+            print("drum listening to " + str(self.object.midi_setting_drum_inote))
+        
         
         self.framebase = context.scene.frame_start
         self.fps = context.scene.render.fps
@@ -108,8 +113,8 @@ class Midi_Generator(bpy.types.Operator):
         if(not self.object.animation_data.action):
             self.object.animation_data.action = bpy.data.actions.new(name="Midi")
         
-        fcux = self.object.animation_data.action.fcurves.new(data_path="location",array_index=0)
-        fcuy = self.object.animation_data.action.fcurves.new(data_path="location",array_index=1)
+        fcux = self.object.animation_data.action.fcurves.new(data_path="location",index=0)
+        fcuy = self.object.animation_data.action.fcurves.new(data_path="location",index=1)
         
         for ev in track.events:
             
@@ -146,8 +151,9 @@ class Midi_Generator(bpy.types.Operator):
                  
                 # shall we animate velocity?
                 if self.object.midi_setting_value == "VELOCITY" or self.object.midi_setting_value == "BOTH":
+                    
                     if ev.velocity > 0:
-                        recent_location[0] = ev.velocity / 127 * self.object.midi_setting_multiplier + org[0] 
+                        recent_location[0] = ev.velocity / 127 * self.object.midi_setting_multiplier[0] + org[0] 
                     else:
                         recent_location[0] = org[0]
                         
@@ -168,9 +174,9 @@ class Midi_Generator(bpy.types.Operator):
                     #self.object.location[0] = recent_location[0]
                     #self.object.location[1] = recent_location[1]
                     #self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time))
-                    kfx = fcux.keyframe_points.add(value=recent_location[0],frame=self.getTimeFrame(ev.time))
+                    kfx = fcux.keyframe_points.insert(value=recent_location[0],frame=self.getTimeFrame(ev.time))
                     kfx.interpolation = self.object.midi_setting_interpolation
-                    kfy = fcuy.keyframe_points.add(value=recent_location[1],frame=self.getTimeFrame(ev.time))
+                    kfy = fcuy.keyframe_points.insert(value=recent_location[1],frame=self.getTimeFrame(ev.time))
                     kfy.interpolation = self.object.midi_setting_interpolation
                 self.note_on = True
                 
@@ -254,8 +260,7 @@ class Midi_Generator(bpy.types.Operator):
 
 
 class Midi_File_Selector(bpy.types.Operator):
-    bl_idname="Midi_File_Selector"
-    
+    bl_idname = "ops.midi_file_selector"
     bl_label = "Midi File Selector"
     
     filepath = bpy.props.StringProperty(subtype="FILE_PATH")
@@ -274,7 +279,7 @@ class Midi_File_Selector(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
 
-class OBJECT_PT_Midi_Driver(bpy.types.Panel):
+class OBJECT_PT_Midi_to_ipo(bpy.types.Panel):
     bl_region_type = "WINDOW"
     bl_space_type = "PROPERTIES"
     bl_context = "object"
@@ -350,17 +355,18 @@ bpy.types.Object.midi_setting_drum_note = bpy.props.StringProperty(
 bpy.types.Object.midi_setting_drum_inote = bpy.props.IntProperty(
                                                              name="Drum Note in int",
                                                              description="Which Note of the Drum to listen to")
-bpy.types.Object.midi_setting_interpolation = bpy.props.EnumProperty(items=ipo_modes,
-                                                             name="Interpolation Mode",
-                                                             description="How Ipos are created")
-bpy.types.Object.midi_setting_clean = bpy.props.BoolProperty(name="Remove all other ipos",
-                                                             description="If checked all other ipos will be removed on generation")
-bpy.types.Object.midi_setting_reset_on_note_off = bpy.props.BoolProperty(name="Reset on Note Off",
-                                                             description="When checked inserts a keyframe of the original position of the object if a Note OFF Event occurs",
-                                                             default=True)
-bpy.types.Object.midi_setting_multiplier = bpy.props.FloatProperty(name="Multiplier",
+bpy.types.Object.midi_setting_multiplier = bpy.props.FloatVectorProperty(name="Multiplier",
                                                              description="Value will be multiplied with this value",
-                                                             default=1.0)
+                                                             default=(1,1,1))
+bpy.types.Object.midi_setting_clean = bpy.props.BoolProperty(
+                                                             name="Clear",
+                                                             description="Clean Ipo Data"
+                                                             )
+bpy.types.Object.midi_setting_reset_on_note_off = bpy.props.BoolProperty(
+                                                             name="Reset on Note Off"
+                                                             
+                                                             )
+
 ipo_values = [
               ("VELOCITY","Velocity",""),
               ("KEY","Key",""),
@@ -371,6 +377,10 @@ bpy.types.Object.midi_setting_value = bpy.props.EnumProperty(items=ipo_values,
                                                              description="The value to animate from. Velocity (0-127) (x axis), Key(0-127) (y axis)"
                                                              )
 
+bpy.types.Object.midi_setting_interpolation = bpy.props.EnumProperty(items=ipo_modes,
+                                                             name="Interpolation Mode"
+                                                             )
+
 ipo_style = [
              ("ADD","Additive",""),
              ("SET","Set","")]
@@ -379,12 +389,17 @@ bpy.types.Object.midi_setting_style = bpy.props.EnumProperty(items=ipo_style,
                                                              description="How to Add Keyframes"
                                                              )
 
+
 def register():
-    
-    pass
+    bpy.utils.register_class(OBJECT_PT_Midi_to_ipo)
+    bpy.utils.register_class(Midi_File_Selector)
+    bpy.utils.register_class(Midi_Generator)
+
 
 def unregister():
-    pass
-
+    bpy.utils.unregister_class()
+    bpy.utils.unregister_class(Midi_File_Selector)
+    bpy.utils.unregister_class(Midi_Generator)
+    
 if __name__ == "__main__":
     register()
