@@ -24,7 +24,7 @@ bl_info = {
     "blender": (2, 5, 3),
     "api": 31667,
     "location": "Object ",
-    "description": "Import Midi Events to Ipo Curves. Inspired and widely ported by the original Import midi drum part into IPO Script by Jean-Baptiste PERIN",
+    "description": "Import Midi Events to Ipo Curves. Inspired and widely ported from the original Import midi drum part into IPO Script by Jean-Baptiste PERIN",
     "warning": "",
     "category": "Import-Export"}
 
@@ -86,7 +86,7 @@ class Midi_Generator(bpy.types.Operator):
         self.TPQN = file.ticksPerQuarterNote
         
         print("Framebase is at " + str(self.framebase))
-        tracknum = self.object.midi_setting_track-1;   
+        tracknum = self.object.midi_setting_track;   
         print ("execution")
         
         if(len(file.tracks) < tracknum):
@@ -126,13 +126,20 @@ class Midi_Generator(bpy.types.Operator):
                 if(ev.type == "NOTE_OFF" or (ev.type == "NOTE_ON" and self.note_on == True)):
                     if(self.shouldSkipIfDrum(ev.pitch)):
                         continue
+                    
+                    if(not self.object.midi_setting_reset_on_note_off):
+                        self.note_on = False
+                        continue
+                    
                     self.object.location = org 
-                    #print("Inserting Note Off")
+                    
+                    print("Inserting Note Off")
                     if(self.note_on):
                         self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time-2))
                     else:
                         self.object.keyframe_insert(data_path="location", frame=self.getTimeFrame(ev.time))
                     self.note_on = False
+                    
                 
             if(ev.type == "NOTE_ON"):
                 
@@ -164,7 +171,7 @@ class Midi_Generator(bpy.types.Operator):
                 # shall we animate key
                 if self.object.midi_setting_value == "KEY" or self.object.midi_setting_value == "BOTH":
                     if ev.pitch is not recent_pitch:
-                        recent_location[1] = org[1] + ev.pitch / 127 * self.object.midi_setting_multiplier
+                        recent_location[1] = org[1] + ev.pitch / 127 * self.object.midi_setting_multiplier[1]
                         recent_pitch = ev.pitch 
                     else:
                         recent_location[1] = org[1]

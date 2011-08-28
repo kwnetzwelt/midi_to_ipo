@@ -1,0 +1,115 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf360
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red51\green108\blue190;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid101\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}.}{\leveltext\leveltemplateid201\'02\'00.;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid301\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid401\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid5}
+{\list\listtemplateid6\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid501\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid6}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}{\listoverride\listid6\listoverridecount0\ls6}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww9920\viewh14200\viewkind0
+\deftab720
+\pard\pardeftab720\ql\qnatural
+
+\f0\b\fs44 \cf0 Thanks\
+\pard\pardeftab720\sa280\ql\qnatural
+
+\b0\fs28 \cf0 Thanks a lot to the following people\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa140\ql\qnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}jpjb ({\field{\*\fldinst{HYPERLINK "http://www.jpjb.eu/"}}{\fldrslt \cf2 http://www.jpjb.eu}}) Testing and Bug-Tracking\
+{\listtext	\'95	}em81 ({\field{\*\fldinst{HYPERLINK "http://www.ewus.de/"}}{\fldrslt \cf2 http://www.ewus.de}}) Encouragement to make this public\
+{\listtext	\'95	}Jean-Baptiste PERIN for his original midi drum-part ipo script\
+\pard\pardeftab720\ql\qnatural
+
+\b\fs64 \cf0 System requirements\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa140\ql\qnatural
+\ls2\ilvl0
+\b0\fs28 \cf0 {\listtext	1.	}you must be running blender 3D 2.59 or later\
+{\listtext	2.	}you must have a version of python installed and set up for blender\
+\pard\pardeftab720\ql\qnatural
+
+\b\fs64 \cf0 Getting started with midi to ipo\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa140\ql\qnatural
+\ls3\ilvl0
+\b0\fs28 \cf0 {\listtext	1.	}Download and install the add-on. For instructions on how to do that please refer to your favourite search engine.\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa280\ql\qnatural
+\ls3\ilvl0\cf0 {\listtext	2.	}Open up blender and activate the add-on. Check the command-line output for any errors. \
+{\listtext	3.	}Create an Object in blender 3D\
+{\listtext	4.	}In the Object panel find the "Midi_Driver" section\
+{\listtext	5.	}Choose a midi file\
+{\listtext	6.	}Refer to {\field{\*\fldinst{HYPERLINK "https://github.com/kwnetzwelt/midi_to_ipo/wiki/Options"}}{\fldrslt \cf2 Options}} page for further instructions\
+\pard\tx560\pardeftab720\sa280\ql\qnatural
+
+\b\fs66 \cf0 \
+\pard\tx560\pardeftab720\sa280\ql\qnatural
+\cf0 Options\
+\pard\pardeftab720\ql\qnatural
+\cf0 \
+
+\i\fs28 Track number
+\b0  Stepper (1-max)
+\i0 \
+\pard\pardeftab720\sa280\ql\qnatural
+\cf0 If your midi file contains more than one track, you can choose the track number to use for this object.\
+
+\i\b Handle as Drum
+\b0  Checkbox (true,false)
+\i0 \
+If you select this option the given track will be handled as a drum track. This means that the midi_driver will only listen to one note in the track.\
+
+\i\b Drum Note
+\b0  String Input (C1-max)
+\i0 \
+This option is only available if Handle as Drum is set true. This is the note the Midi_Driver will listen to. Valid values are C1,C#1, B#2 and so on\
+
+\i\b Interpolation
+\b0  SelectBox (Rectangle,Linear,Smooth)
+\i0 \
+Sets the interpolation the generated ipo-curve will use.\
+
+\i\b Clear
+\b0  Checkbox (true,false)
+\i0 \
+Check this box to clear out all IPO-Data on the object before generating.\
+
+\i\b Reset on Note Off
+\b0  Checkbox (true,false)
+\i0 \
+Checking this box will result in "zero" position key-frames being added each time a note off is found in the midi-data. Unchecking this option will generate a continuous movement to the target position generated out of the data, while checking will generate a "up-and-down" behavior.\
+
+\i\b Multiplier
+\b0  FloatVector(x,y,z)
+\i0 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa140\ql\qnatural
+\ls4\ilvl0
+\i \cf0 {\listtext	\'95	}x
+\i0  the value multiplied with velocity value\
+\ls4\ilvl0
+\i {\listtext	\'95	}y
+\i0  the value multiplied with key value\
+\pard\pardeftab720\sa280\ql\qnatural
+
+\i\b \cf0 Value to animate
+\b0  SelectBox (Both, Key, Velocity)
+\i0 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa140\ql\qnatural
+\ls5\ilvl0
+\i \cf0 {\listtext	\'95	}Velocity
+\i0  will be animated on the x-axis. The Object will move on that axis each time the velocity of the played note is changed.\
+\ls5\ilvl0
+\i {\listtext	\'95	}Key
+\i0  will be animated on the y-axis. The object will move on that axis each time the key of the played note is changed.\
+\pard\pardeftab720\sa280\ql\qnatural
+
+\i\b \cf0 Keyframe
+\b0  SelectBox (Set,Additive)
+\i0 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa140\ql\qnatural
+\ls6\ilvl0
+\i \cf0 {\listtext	\'95	}Set
+\i0  will set the position on all animated axes to the calculated value\
+\ls6\ilvl0
+\i {\listtext	\'95	}Additive
+\i0  will add the calculated value to the current position of the object\
+}
