@@ -88,11 +88,16 @@ class Midi_Generator(bpy.types.Operator):
         print("Framebase is at " + str(self.framebase))
         tracknum = self.object.midi_setting_track;   
         print ("execution")
-        
+        print ( str(len(file.tracks)) + " tracks in file")
+        print ("looking for track no: " + str(tracknum))
+
+
+
         if(len(file.tracks) < tracknum):
             print ("Track not found")
+            return
         
-        track = file.tracks[tracknum]
+        track = file.tracks[tracknum - 1]
         
         
         print ("ticksPerQuarterNote = ", file.ticksPerQuarterNote," ticksPerSecond= ",file.ticksPerSecond)

@@ -409,6 +409,7 @@ class MidiFile:
             trk = MidiTrack(i)
             bytes = trk.read(bytes)
             self.tracks.append(trk)
+            print("tracks " + str(i+1) + " events " + str(len(trk.events)))
 
     def write(self):
         self.file.write(self.writestr())
